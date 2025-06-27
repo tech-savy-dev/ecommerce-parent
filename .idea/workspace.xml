@@ -32,7 +32,6 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
     "last_opened_file_path": "/Users/vaddevolu.srikanth/projects/ecommerce_project_bundle (1)/ecommerce-parent"
   }
 }]]></component>
@@ -58,5 +57,16 @@
       <updated>1750860259518</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
