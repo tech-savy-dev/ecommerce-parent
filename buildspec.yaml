@@ -22,7 +22,7 @@ phases:
         --output text)
       - echo "[DEBUG] Raw token response:"
       - aws codeartifact get-authorization-token \
-        --domain $$DOMAIN \
+        --domain $DOMAIN \
         --domain-owner $AWS_ACCOUNT_ID \
         --region $REGION \
         --query authorizationToken \
