@@ -15,6 +15,19 @@ phases:
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --region $REGION --query authorizationToken --output text)
       - echo "[INSTALL] Generating Maven settings.xml for CodeArtifact..."
+      # ✅ Echoing values for verification
+      - echo "[DEBUG] DOMAIN = $DOMAIN"
+      - echo "[DEBUG] REGION = $REGION"
+      - echo "[DEBUG] REPOSITORY = $REPOSITORY"
+      - echo "[DEBUG] AWS_ACCOUNT_ID = $AWS_ACCOUNT_ID"
+      - echo "[DEBUG] CodeArtifact URL = https://$DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$REGION.amazonaws.com/maven/$REPOSITORY/"
+      - echo "[DEBUG] Auth token length = ${#CODEARTIFACT_AUTH_TOKEN}"
+
+      # Do NOT print full token; just confirm it exists
+      - echo "[DEBUG] Auth token available? -> $( [ -n \"$CODEARTIFACT_AUTH_TOKEN\" ] && echo '✅ YES' || echo '❌ NO' )"
+
+
+
       - mkdir -p ~/.m2
       - |
         cat > ~/.m2/settings.xml <<EOL
