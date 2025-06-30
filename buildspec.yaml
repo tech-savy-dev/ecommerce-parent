@@ -20,14 +20,13 @@ phases:
         --region $REGION \
         --query authorizationToken \
         --output text)
-
-      # ✅ Echo debug info
-      - bash -c 'echo "[DEBUG] CODEARTIFACT_AUTH_TOKEN (first 10 chars) = ${CODEARTIFACT_AUTH_TOKEN:0:10}"'
-      - echo "[DEBUG] REGION = $REGION"
-      - echo "[DEBUG] REPOSITORY = $REPOSITORY"
-      - echo "[DEBUG] AWS_ACCOUNT_ID = $AWS_ACCOUNT_ID"
-      - echo "[DEBUG] CodeArtifact URL = https://$DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$REGION.amazonaws.com/maven/$REPOSITORY/"
-      - echo "[DEBUG] Auth token available? -> $( [ -n \"$CODEARTIFACT_AUTH_TOKEN\" ] && echo '✅ YES' || echo '❌ NO' )"
+      - echo "[DEBUG] Raw token response:"
+      - aws codeartifact get-authorization-token \
+        --domain $$DOMAIN \
+        --domain-owner $AWS_ACCOUNT_ID \
+        --region $REGION \
+        --query authorizationToken \
+        --output text
 
       # 🛠️ Setup Maven settings.xml
       - mkdir -p ~/.m2
