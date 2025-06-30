@@ -19,6 +19,13 @@
     <jjwt.version>0.12.6</jjwt.version>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>codeartifact</id>
+      <url>https://ecommerce-domain-677450898543.d.codeartifact.ap-southeast-1.amazonaws.com/maven/ecommerce-shared/</url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <!-- Spring Boot BOM for dependency versions -->
