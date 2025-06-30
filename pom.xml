@@ -22,8 +22,14 @@
   <distributionManagement>
     <repository>
       <id>codeartifact</id>
+      <name>ecommerce-release</name>
       <url>https://ecommerce-domain-677450898543.d.codeartifact.ap-southeast-1.amazonaws.com/maven/ecommerce-shared/</url>
     </repository>
+    <snapshotRepository>
+      <id>codeartifact</id>
+      <name>ecommerce-snapshots</name>
+      <url>https://ecommerce-domain-677450898543.d.codeartifact.ap-southeast-1.amazonaws.com/maven/ecommerce-shared/</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <dependencyManagement>
