@@ -18,13 +18,8 @@ phases:
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
       - echo "[INSTALL] Exporting CodeArtifact auth token..."
-      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
-        --domain $DOMAIN \
-        --domain-owner $AWS_ACCOUNT_ID \
-        --region $REGION \
-        --query authorizationToken \
-        --output text)
-
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $AWS_ACCOUNT_ID --region $REGION --query authorizationToken --output text)
+      - echo "[DEBUG] CODEARTIFACT_AUTH_TOKEN first 10 chars:" $(echo $CODEARTIFACT_AUTH_TOKEN | cut -c1-10)
       - echo "[INSTALL] Running aws codeartifact get-authorization-token..."
       - aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $AWS_ACCOUNT_ID --region $REGION
 
