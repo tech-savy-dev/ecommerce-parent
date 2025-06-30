@@ -3,32 +3,38 @@ version: 0.2
 env:
   variables:
     DOMAIN: "ecommerce-domain"
-    REPOSITORY: "ecommerce-shared"
-    REGION: "ap-southeast-1"
     REPO: "ecommerce-shared"
+    REGION: "ap-southeast-1"
 
 phases:
   install:
     runtime-versions:
       java: corretto21
     commands:
-      - echo "[INSTALL] Authenticating with AWS CodeArtifact..."
+      - echo "[INSTALL] Running aws sts get-caller-identity..."
+      - aws sts get-caller-identity
+
+      - echo "[INSTALL] Extracting AWS Account ID..."
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - echo "[DEBUG] AWS Account ID: $AWS_ACCOUNT_ID"
+
+      - echo "[INSTALL] Running aws codeartifact get-authorization-token..."
+      - aws codeartifact get-authorization-token \
+        --domain $DOMAIN \
+        --domain-owner $AWS_ACCOUNT_ID \
+        --region $REGION
+
+      - echo "[INSTALL] Exporting CodeArtifact auth token..."
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
         --domain $DOMAIN \
         --domain-owner $AWS_ACCOUNT_ID \
         --region $REGION \
         --query authorizationToken \
         --output text)
-      - echo "[DEBUG] Raw token response:"
-      - aws codeartifact get-authorization-token \
-        --domain $DOMAIN \
-        --domain-owner $AWS_ACCOUNT_ID \
-        --region $REGION \
-        --query authorizationToken \
-        --output text
 
-      # 🛠️ Setup Maven settings.xml
+      - echo "[DEBUG] CODEARTIFACT_AUTH_TOKEN first 10 chars: $(echo $CODEARTIFACT_AUTH_TOKEN | cut -c1-10)"
+
+      - echo "[INSTALL] Generating Maven settings.xml for CodeArtifact..."
       - mkdir -p ~/.m2
       - |
         cat > ~/.m2/settings.xml <<EOL
@@ -52,7 +58,7 @@ phases:
 
   build:
     commands:
-      - echo "[BUILD] Installing dependencies and deploying parent POM to CodeArtifact..."
+      - echo "[BUILD] Starting Maven build..."
       - mvn clean install -s ~/.m2/settings.xml -DskipTests -U
       - mvn deploy -s ~/.m2/settings.xml -DskipTests
 
