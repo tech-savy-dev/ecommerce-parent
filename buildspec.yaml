@@ -5,6 +5,7 @@ env:
     DOMAIN: "ecommerce-domain"
     REPOSITORY: "ecommerce-shared"
     REGION: "ap-southeast-1"
+    REPO: "ecommerce-shared"
 
 phases:
   install:
@@ -27,7 +28,6 @@ phases:
       - echo "[DEBUG] AWS_ACCOUNT_ID = $AWS_ACCOUNT_ID"
       - echo "[DEBUG] CodeArtifact URL = https://$DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$REGION.amazonaws.com/maven/$REPOSITORY/"
       - echo "[DEBUG] Auth token available? -> $( [ -n \"$CODEARTIFACT_AUTH_TOKEN\" ] && echo '✅ YES' || echo '❌ NO' )"
-      - echo "[DEBUG] CODEARTIFACT_AUTH_TOKEN = $CODEARTIFACT_AUTH_TOKEN"
 
       # 🛠️ Setup Maven settings.xml
       - mkdir -p ~/.m2
@@ -36,14 +36,14 @@ phases:
         <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
           <mirrors>
             <mirror>
-              <id>codeartifact</id>
+              <id>ecommerce-domain-ecommerce-parent-artifacts</id>
               <mirrorOf>*</mirrorOf>
-              <url>https://$DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$REGION.amazonaws.com/maven/$REPOSITORY/</url>
+              <url>https://${DOMAIN}-${AWS_ACCOUNT_ID}.d.codeartifact.${REGION}.amazonaws.com/maven/${REPO}/</url>
             </mirror>
           </mirrors>
           <servers>
             <server>
-              <id>codeartifact</id>
+              <id>ecommerce-domain-ecommerce-parent-artifacts</id>
               <username>aws</username>
               <password>${CODEARTIFACT_AUTH_TOKEN}</password>
             </server>
@@ -54,7 +54,7 @@ phases:
   build:
     commands:
       - echo "[BUILD] Installing dependencies and deploying parent POM to CodeArtifact..."
-      - mvn clean install -s ~/.m2/settings.xml -DskipTests
+      - mvn clean install -s ~/.m2/settings.xml -DskipTests -U
       - mvn deploy -s ~/.m2/settings.xml -DskipTests
 
 artifacts:
