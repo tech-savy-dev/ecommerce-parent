@@ -36,14 +36,14 @@ phases:
         <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
           <mirrors>
             <mirror>
-              <id>ecommerce-domain-ecommerce-parent-artifacts</id>
+              <id>codeartifact</id>
               <mirrorOf>*</mirrorOf>
               <url>https://${DOMAIN}-${AWS_ACCOUNT_ID}.d.codeartifact.${REGION}.amazonaws.com/maven/${REPO}/</url>
             </mirror>
           </mirrors>
           <servers>
             <server>
-              <id>ecommerce-domain-ecommerce-parent-artifacts</id>
+              <id>codeartifact</id>
               <username>aws</username>
               <password>${CODEARTIFACT_AUTH_TOKEN}</password>
             </server>
