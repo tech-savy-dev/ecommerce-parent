@@ -22,7 +22,7 @@ phases:
         --output text)
 
       # ✅ Echo debug info
-      - echo "[DEBUG] CODEARTIFACT_AUTH_TOKEN = ${CODEARTIFACT_AUTH_TOKEN:0:10}"
+      - echo "[DEBUG] CODEARTIFACT_AUTH_TOKEN = $(echo $CODEARTIFACT_AUTH_TOKEN | cut -c1-10)"
       - echo "[DEBUG] REGION = $REGION"
       - echo "[DEBUG] REPOSITORY = $REPOSITORY"
       - echo "[DEBUG] AWS_ACCOUNT_ID = $AWS_ACCOUNT_ID"
