@@ -1,35 +1,24 @@
 version: 0.2
-
 env:
   variables:
-    DOMAIN: "ecommerce-domain"
-    REPOSITORY: "ecommerce-shared"
-    REGION: "ap-southeast-1"
-    REPO: "ecommerce-shared"
-
+    DOMAIN: ecommerce-domain
+    REPOSITORY: ecommerce-shared
+    REGION: ap-southeast-1
+    REPO: ecommerce-shared
 phases:
   install:
     runtime-versions:
       java: corretto21
     commands:
-      - echo "[INSTALL] Authenticating with AWS CodeArtifact..."
-      - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
-        --domain $DOMAIN \
-        --domain-owner $AWS_ACCOUNT_ID \
-        --region $REGION \
-        --query authorizationToken \
+      - 'echo "[INSTALL] Authenticating with AWS CodeArtifact..."'
+      - >-
+        export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account
         --output text)
-
-      # ✅ Echo debug info
-      - echo "[DEBUG] DOMAIN = $DOMAIN"
-      - echo "[DEBUG] REGION = $REGION"
-      - echo "[DEBUG] REPOSITORY = $REPOSITORY"
-      - echo "[DEBUG] AWS_ACCOUNT_ID = $AWS_ACCOUNT_ID"
-      - echo "[DEBUG] CodeArtifact URL = https://$DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$REGION.amazonaws.com/maven/$REPOSITORY/"
-      - echo "[DEBUG] Auth token available? -> $( [ -n \"$CODEARTIFACT_AUTH_TOKEN\" ] && echo '✅ YES' || echo '❌ NO' )"
-
-      # 🛠️ Setup Maven settings.xml
+      - >-
+        export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact
+        get-authorization-token \ --domain $DOMAIN \ --domain-owner
+        $AWS_ACCOUNT_ID \ --region $REGION \ --query authorizationToken \
+        --output text)
       - mkdir -p ~/.m2
       - |
         cat > ~/.m2/settings.xml <<EOL
@@ -50,13 +39,13 @@ phases:
           </servers>
         </settings>
         EOL
-
   build:
     commands:
-      - echo "[BUILD] Installing dependencies and deploying parent POM to CodeArtifact..."
+      - >-
+        echo "[BUILD] Installing dependencies and deploying parent POM to
+        CodeArtifact..."
       - mvn clean install -s ~/.m2/settings.xml -DskipTests -U
       - mvn deploy -s ~/.m2/settings.xml -DskipTests
-
 artifacts:
   files:
     - '**/pom.xml'
