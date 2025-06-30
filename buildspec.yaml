@@ -17,12 +17,6 @@ phases:
       - echo "[INSTALL] Extracting AWS Account ID..."
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
-      - echo "[INSTALL] Running aws codeartifact get-authorization-token..."
-      - aws codeartifact get-authorization-token \
-        --domain $DOMAIN \
-        --domain-owner $AWS_ACCOUNT_ID \
-        --region $REGION
-
       - echo "[INSTALL] Exporting CodeArtifact auth token..."
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
         --domain $DOMAIN \
@@ -30,6 +24,11 @@ phases:
         --region $REGION \
         --query authorizationToken \
         --output text)
+
+      - echo "[INSTALL] Running aws codeartifact get-authorization-token..."
+      - aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $AWS_ACCOUNT_ID --region $REGION
+
+
 
       - echo "[INSTALL] Generating Maven settings.xml for CodeArtifact..."
       - mkdir -p ~/.m2
